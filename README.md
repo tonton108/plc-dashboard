@@ -73,3 +73,6 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+起動コマンド
+flask --app backend/manage.py run --host=0.0.0.0
