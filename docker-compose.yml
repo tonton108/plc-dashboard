@@ -1,0 +1,48 @@
+services:
+  # Flask APIサーバー（バックエンド）
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      # ホットリロード用: ソースコードをマウント
+      - .:/app
+      # データベースファイルを永続化（PostgreSQL使用時は不要だが残しておく）
+      - ./instance:/app/instance
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://plc_user:plc_pass@host.docker.internal:5432/plc_monitor
+      - PYTHONPATH=/app
+    networks:
+      - plc-network
+    restart: unless-stopped
+
+  # Nuxt.js フロントエンド
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      # ホットリロード用: ソースコードをマウント（node_modulesは除外）
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - NITRO_HOST=0.0.0.0
+      - NITRO_PORT=3000
+    networks:
+      - plc-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  plc-network:
+    driver: bridge
+
+# volumes:
+  # db_data: (removed - using local PostgreSQL) 

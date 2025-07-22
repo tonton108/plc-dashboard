@@ -1,5 +1,10 @@
 flask
 flask_sqlalchemy
 flask_migrate
-psycopg
+flask_socketio
+flask_cors
+psycopg2-binary
 python-dotenv
+greenlet
+requests
+eventlet
